@@ -11,7 +11,8 @@ const double eps=1e-7;
 class Matrix
 {
 public:
-    Matrix(int row,int col);//Ä¬ÈÏ³õÊ¼ÖµÈ«ÎªÁã
+    Matrix(int row,int col);//é»˜è®¤åˆå§‹å€¼å…¨ä¸ºé›¶
+	//è¿ç®—ç¬¦é‡è½½
     Matrix& operator+=(Matrix& tmp);
     Matrix& operator-=(Matrix& tmp);
     Matrix& operator*=(Matrix& tmp);
@@ -22,32 +23,32 @@ public:
     Matrix operator+(Matrix &op);
     Matrix operator-(Matrix &op);
     Matrix operator*(Matrix &op);
-    friend void solve(Matrix &op1,Matrix &op2,double* ans);
+    friend void solve(Matrix &op1,Matrix &op2,double* ans);//æ±‚AX=b
     friend istream& operator>>(istream &is,Matrix& tmp);
     void operator()(int row,int col,double e);
     friend Matrix& inv(Matrix &op);
-    friend int Rank(Matrix& op);
-    double det(double** a,int n);
-    void Initial_Size(Matrix &op);
-    bool  Eig();
+    friend int Rank(Matrix& op);//æ±‚ç§©
+    double det(double** a,int n);//æ±‚è¡Œåˆ—å¼
+    void Initial_Size(Matrix &op);//åˆå§‹åŒ–å¤§å°
+    bool  Eig();//æ±‚ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡
     Matrix(Matrix& p);
-    void Display_Matrix();
+    void Display_Matrix();//è¾“å‡ºçŸ©é˜µ
     ~Matrix();
-    static Matrix& T(const Matrix &tmp);
-    Matrix accompany(Matrix &op);
-    int Row();
-    int Col();
-    double **Data();
-    void Row_Ladder();
-    Matrix quick_mi(Matrix tmp,int k);
-    Matrix operator^(int n);
-    void eye();
+    static Matrix& T(const Matrix &tmp);//çŸ©é˜µè½¬ç½®
+    Matrix accompany(Matrix &op);//æ±‚ä¼´éšçŸ©é˜µ
+    int Row();//å–çŸ©é˜µçš„è¡Œæ•°
+    int Col();//å–çŸ©é˜µçš„åˆ—æ•°
+    double **Data();//å–äºŒç»´æ•°ç»„é¦–åœ°å€
+    void Row_Ladder();//æ±‚è¡Œé˜¶æ¢¯å‹
+    Matrix quick_mi(Matrix tmp,int k);//æ±‚å¿«é€Ÿå¹‚
+    Matrix operator^(int n);//å¹‚æœ´ç´ æ±‚æ³•
+    void eye();//åˆå§‹åŒ–ä¸€ä¸ªå•ä½çŸ©é˜µ
 
 private:
     int row,col;
     double** data;
 };
-
+#åˆå§‹åŒ–ä¸€ä¸ªå•ä½çŸ©é˜µ
 void Matrix::eye()
 {
 	for(int i=0;i<row;i++)
@@ -89,37 +90,38 @@ Matrix quick_mi(Matrix tmp,int k)
     }
     return x;
 }
-
+//èœå•
 void menu()
 {
 	cout<<"***************************"<<endl; 
-    cout<<"1 ¼ÓµÈ£¬¼õµÈ,³ËµÈ"<<endl;
-    cout<<"2 ×ªÖÃ"<<endl;
-    cout<<"3 ÇóÄæ"<<endl;
-    cout<<"4 ĞĞÁĞÊ½"<<endl;
-    cout<<"5 ¼Ó¼õ³Ë"<<endl;
-//  cout<<"6 ¸Ä±äÖµ"<<endl;
+    cout<<"1 åŠ ç­‰ï¼Œå‡ç­‰,ä¹˜ç­‰"<<endl;
+    cout<<"2 è½¬ç½®"<<endl;
+    cout<<"3 æ±‚é€†"<<endl;
+    cout<<"4 è¡Œåˆ—å¼"<<endl;
+    cout<<"5 åŠ å‡ä¹˜"<<endl;
+//  cout<<"6 æ”¹å˜å€¼"<<endl;
     cout<<"6 AX=b"<<endl;
-    cout<<"7 ÇóÖÈ"<<endl;
-    cout<<"8 ÇóÌØÕ÷ÖµºÍÌØÕ÷ÏòÁ¿"<<endl;
-    cout<<"9 Çó¿ìËÙÃİ"<<endl;
+    cout<<"7 æ±‚ç§©"<<endl;
+    cout<<"8 æ±‚ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡"<<endl;
+    cout<<"9 æ±‚å¿«é€Ÿå¹‚"<<endl;
     cout<<"***************************"<<endl; 
 }
+//é‡‡ç”¨é›…å¯æ¯”ç®—æ³•æ±‚ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡
 bool  Matrix::Eig()
     {
         if(col!=row)
         {
-            cout<<"¾ØÕó²»ÊÇ·½Õó,ÎŞ·¨ÇóÌØÕ÷ÖµºÍÌØÕ÷ÏòÁ¿!"<<endl;
+            cout<<"çŸ©é˜µä¸æ˜¯æ–¹é˜µ,æ— æ³•æ±‚ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡!"<<endl;
             return 0;
         }
-        int cnt=10000;//µü´ú´ÎÊı 
-        double precision=0.0001;//ÉèÖÃ¾«¶È 
+        int cnt=10000;//è¿­ä»£æ¬¡æ•° 
+        double precision=0.0001;//è®¾ç½®ç²¾åº¦ 
         //double *mat=new double[row*col]; 
         Matrix mat(row,col);
         Matrix pvector(row,col);
         
-        //double *pvector=new double[row*col];//´æ·ÅÌØÕ÷ÏòÁ¿ 
-        double *pvalues=new double[row];//´æ·ÅÌØÕ÷Öµ 
+        //double *pvector=new double[row*col];//å­˜æ”¾ç‰¹å¾å‘é‡ 
+        double *pvalues=new double[row];//å­˜æ”¾ç‰¹å¾å€¼ 
     //  memset(pvector,0,sizeof(double)*row*col);
     //  cout<<'#'<<endl;
     //  cout<<sizeof(double)*<<endl;
@@ -152,16 +154,16 @@ bool  Matrix::Eig()
         
 
         
-        int nCount = 0;     //µü´ú´ÎÊı
+        int nCount = 0;     //è¿­ä»£æ¬¡æ•°
         while(1)
         {
-            //ÔÚmatµÄ·Ç¶Ô½ÇÏßÉÏÕÒµ½×î´óÔªËØ
+            //åœ¨matçš„éå¯¹è§’çº¿ä¸Šæ‰¾åˆ°æœ€å¤§å…ƒç´ 
             double dbMax = mat.data[0][1];
             int nRow = 0;
             int nCol = 1;
-            for (int i = 0; i < row; i ++)          //ĞĞ
+            for (int i = 0; i < row; i ++)          //è¡Œ
             {
-                for (int j = 0; j < row; j ++)      //ÁĞ
+                for (int j = 0; j < row; j ++)      //åˆ—
                 {
                     double d = fabs(mat.data[i][j]); 
      
@@ -174,15 +176,15 @@ bool  Matrix::Eig()
                 }
             }   
         //  cout<<"@"<<endl; 
-            if(dbMax < precision)     //¾«¶È·ûºÏÒªÇó 
+            if(dbMax < precision)     //ç²¾åº¦ç¬¦åˆè¦æ±‚ 
                 break;   
-            if(nCount > cnt)       //µü´ú´ÎÊı³¬¹ıÏŞÖÆ
+            if(nCount > cnt)       //è¿­ä»£æ¬¡æ•°è¶…è¿‡é™åˆ¶
                 break;   
             nCount++;    
             double dbApp = mat.data[nRow][nRow];
             double dbApq = mat.data[nRow][nCol];
             double dbAqq = mat.data[nCol][nCol];     
-            //¼ÆËãĞı×ª½Ç¶È
+            //è®¡ç®—æ—‹è½¬è§’åº¦
             double dbAngle = 0.5*atan2(-2*dbApq,dbAqq-dbApp);
             double dbSinTheta = sin(dbAngle);
             double dbCosTheta = cos(dbAngle);
@@ -198,8 +200,6 @@ bool  Matrix::Eig()
             { 
                 if((i!=nCol) && (i!=nRow)) 
                 { 
-                    //int u = i*row + nRow; //p  
-                    //int w = i*row + nCol; //q
                     dbMax = mat.data[i][nRow]; 
                     mat.data[i][nRow]= mat.data[i][nCol]*dbSinTheta + dbMax*dbCosTheta; 
                     mat.data[i][nCol]= mat.data[i][nCol]*dbCosTheta - dbMax*dbSinTheta; 
@@ -209,33 +209,27 @@ bool  Matrix::Eig()
             {
                 if((j!=nCol) && (j!=nRow)) 
                 { 
-                    //int u = nRow*row + j; //p
-                    //int w = nCol*row + j; //q
                     dbMax = mat.data[nRow][j]; 
                     mat.data[nRow][j]= mat.data[nCol][j]*dbSinTheta + dbMax*dbCosTheta; 
                     mat.data[nCol][j]= mat.data[nCol][j]*dbCosTheta - dbMax*dbSinTheta; 
                 } 
             }    
-            //¼ÆËãÌØÕ÷ÏòÁ¿
+            //è®¡ç®—ç‰¹å¾å‘é‡
             for(int i = 0; i < row; i ++) 
             { 
-            //  int u = i*row + nRow;   //[i][nRow] //p   
-            //  int w = i*row + nCol;   //[i][nCol] //q
                 dbMax = pvector.data[i][nRow]; 
                 pvector.data[i][nRow] = pvector.data[i][nCol]*dbSinTheta + dbMax*dbCosTheta; 
                 pvector.data[i][nCol] = pvector.data[i][nCol]*dbCosTheta - dbMax*dbSinTheta; 
             }
      
         }    
-        //¶ÔÌØÕ÷Öµ½øĞĞÅÅĞòÒÔ¼°ÖØĞÂÅÅÁĞÌØÕ÷ÏòÁ¿,ÌØÕ÷Öµ¼´matÖ÷¶Ô½ÇÏßÉÏµÄÔªËØ
-//      map<double,int> mapEigen;
-        cout<<"¾ØÕóÌØÕ÷ÖµÎª:";
+        //å¯¹ç‰¹å¾å€¼è¿›è¡Œæ’åºä»¥åŠé‡æ–°æ’åˆ—ç‰¹å¾å‘é‡,ç‰¹å¾å€¼å³matä¸»å¯¹è§’çº¿ä¸Šçš„å…ƒç´ 
+        cout<<"çŸ©é˜µç‰¹å¾å€¼ä¸º:";
         for(int i=0;i<row;i++)
         {
             cout<<mat.data[i][i]<<' ';
-        //  cout<<endl;
         }
-        cout<<endl<<endl<<"¾ØÕóÌØÕ÷ÏòÁ¿Îª(°´ÁĞ´æ·Å):"<<endl;
+        cout<<endl<<endl<<"çŸ©é˜µç‰¹å¾å‘é‡ä¸º(æŒ‰åˆ—å­˜æ”¾):"<<endl;
         for(int i=0;i<row;i++)
         {
             for(int j=0;j<col;j++)
@@ -322,7 +316,7 @@ int Rank(Matrix& op)
 
  void solve(Matrix &op1,Matrix &op2,double *ans)
 {
-    //¾ØÕóºÏ²¢
+    //çŸ©é˜µåˆå¹¶
     if(op1.row!=op2.row)
     {
         cout<<"solve Ax=b error"<<endl;
@@ -409,7 +403,7 @@ Matrix Matrix::accompany(Matrix &op)
                 {
                     temp.data[k][t]=op.data[k>=i?k+1:k][t>=j?t+1:t];
                 }
-            }//°éËæ¾ØÕó£¬¶ÔÓ¦ÄâÖÆ
+            }//ä¼´éšçŸ©é˜µï¼Œå¯¹åº”æ‹Ÿåˆ¶
             tmp.data[j][i]=det(temp.data,n-1)*(((i+j+2)%2)?-1:1);
         }
     }
@@ -590,7 +584,7 @@ istream& operator>>(istream &is,Matrix& tmp)
 
 void Matrix::Initial_Size(Matrix &op)
 {
-    op.data=new double*[op.row];//data µÄÄÚÈİÊÇdouble*
+    op.data=new double*[op.row];//data çš„å†…å®¹æ˜¯double*
     for(int i=0;i<op.row;i++)
     {
         op.data[i]=new double[op.col];
@@ -639,8 +633,8 @@ Matrix::Matrix(Matrix &p)
 {
     row=p.row;
     col=p.col;
-//  cout<<"¿½±´¹¹Ôìº¯ÊıÊ¹ÓÃÖĞ"<<endl;
-        data=new double*[row];//doubleĞÍÖ¸ÕëµÄÖ¸Õë
+//  cout<<"æ‹·è´æ„é€ å‡½æ•°ä½¿ç”¨ä¸­"<<endl;
+        data=new double*[row];//doubleå‹æŒ‡é’ˆçš„æŒ‡é’ˆ
         for(int i=0;i<row;i++)
         {
             data[i]=new double[col];
@@ -670,7 +664,7 @@ Matrix::Matrix(Matrix &p)
 
 Matrix::Matrix(int row1,int col1):row(row1),col(col1)
 {
-//  cout<<"¹¹Ôìº¯ÊıÊ¹ÓÃÖĞ"<<endl;
+//  cout<<"æ„é€ å‡½æ•°ä½¿ç”¨ä¸­"<<endl;
         Initial_Size(*this);
         for(int i=0;i<row;i++)
         {
@@ -705,7 +699,7 @@ Matrix& Matrix::operator/(double x)
     return *this;
 }
 
-Matrix& Matrix::operator*=(Matrix &tmp)//ĞĞ³ËÁĞ 
+Matrix& Matrix::operator*=(Matrix &tmp)//è¡Œä¹˜åˆ— 
 {
     if(col!=tmp.row)
     {
@@ -797,10 +791,10 @@ int main()
             cout<<"set up two Matrix input row and col num"<<endl;
 
             cin>>r>>c;
-            Matrix t1(r,c),t2(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c),t2(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input first Matrix content and second content"<<endl;
-            cin>>t1>>t2;//ÊäÈëĞÅÏ¢
+            cin>>t1>>t2;//è¾“å…¥ä¿¡æ¯
 
             string in_op;
             cout<<"input in_op += a,-= b,*= c"<<endl;
@@ -828,10 +822,10 @@ int main()
             int r,c;
             cout<<"set up a Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t1(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
             cout<<"ans="<<endl;
             Matrix ans=t1.T(t1);
             ans.Display_Matrix();
@@ -842,10 +836,10 @@ int main()
             int r,c;
             cout<<"set up a Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t1(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
 
             Matrix ans=inv(t1);
             cout<<"ans="<<endl;
@@ -857,10 +851,10 @@ int main()
             int r,c;
             cout<<"set up a Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t1(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
             double ans=t1.det(t1.Data(),t1.Row());
             cout<<"ans="<<endl;
             cout<<ans<<endl;
@@ -873,10 +867,10 @@ int main()
             cout<<"set up two Matrix input row and col num"<<endl;
 
             cin>>r>>c;
-            Matrix t1(r,c),t2(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c),t2(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input first Matrix content and second content"<<endl;
-            cin>>t1>>t2;//ÊäÈëĞÅÏ¢
+            cin>>t1>>t2;//è¾“å…¥ä¿¡æ¯
 
             string in_op;
             Matrix ans(r,c);
@@ -904,17 +898,17 @@ int main()
             int r,c;
             cout<<"set up A Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t1(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
 
             cout<<"set up b Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t2(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t2(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t2;//ÊäÈëĞÅÏ¢
+            cin>>t2;//è¾“å…¥ä¿¡æ¯
             double ans[t1.Col()+3];
             solve(t1,t2,ans);
             cout<<"ans="<<endl;
@@ -930,10 +924,10 @@ int main()
             int r,c;
             cout<<"set up a Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t1(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
 
             int ans=Rank(t1);
             cout<<"ans="<<endl;
@@ -945,10 +939,10 @@ int main()
             int r,c;
             cout<<"set up a Matrix input row and col num"<<endl;
             cin>>r>>c;
-            Matrix t1(r,c);//´´½¨ĞÂµÄ¾ØÕó¶ÔÏó
+            Matrix t1(r,c);//åˆ›å»ºæ–°çš„çŸ©é˜µå¯¹è±¡
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
             bool a=t1.Eig();
         }
         else if(op[0]=='E')
@@ -963,7 +957,7 @@ int main()
             Matrix t1(r,c);
 
             cout<<"input the Matrix content "<<endl;
-            cin>>t1;//ÊäÈëĞÅÏ¢
+            cin>>t1;//è¾“å…¥ä¿¡æ¯
 
             int k;
             cout<<"index"<<endl;
@@ -980,37 +974,3 @@ int main()
     
 return 0;   
 }
-
-//  cout<<'#'<<endl;
-//  text0+=text2;
-//  text0.Display_Matrix();
-//  text0-=text2;
-//  text0.Display_Matrix();
-//  Matrix text2;
-//  cin>>text0;
-//  int temp=Rank(text0);
-//  cout<<temp<<endl;
-//  (text1+text0+text2).Display_Matrix();
-//  text0=text1+text0;
-//  
-//  solve(text0,text1,ans);
-//  for(int i=1;i<=text0.Col();i++)
-//  {
-//      cout<<fixed<<setprecision(2)<<ans[i]<<' ';
-//  }
-//  Matrix text1(3,2);
-//  cin>>text1;
-//  Matrix text3(2,2);
-//  text3=text0*text1;
-// text3=Matrix::T(text0); 
-//  cout<<'#'<<endl;
-//  double e;
-//  cin>>e;
-//  text0(1,1,e);
-//  cout<<text0.det(text0.Data(),text0.Row());
-//  text0.Display_Matrix(); 
-//  text0.Display_Matrix();
-//  return 0;
-//}
-
-
